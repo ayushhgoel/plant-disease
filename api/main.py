@@ -124,4 +124,7 @@ async def predict(data: dict):
         raise HTTPException(status_code=400, detail=f"Error processing image: {str(e)}")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host='localhost', port=8000)
+    is_in_docker = os.environ.get('RUNNING_IN_DOCKER', 'false').lower() == 'true'
+    host_ip = '0.0.0.0' if is_in_docker else 'localhost'
+    print(f"Starting server on {host_ip}:8000 (Running in Docker: {is_in_docker})")
+    uvicorn.run(app, host=host_ip, port=8000)
